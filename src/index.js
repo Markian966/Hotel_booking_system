@@ -1,34 +1,43 @@
-const Hotel = require("./modules/Hotel");
-const Room = require("./modules/Room");
-const UI = require("./modules/UI");
+import Hotel from "./modules/Hotel.js";
+import Room from "./modules/Room.js";
+import UI from "./modules/UI.js";
+import HotelAPI from "./modules/api_hotel.js";
 
-const hotel = new Hotel("Grand Hotel");
-const room101 = new Room(101, "Standard");
-const room102 = new Room(102, "Deluxe");
-const room103 = new Room(103, "Suite");
-const room104 = new Room(104, "Standard");
+document.addEventListener("DOMContentLoaded", () => {
+    const hotel = new Hotel("Grand Hotel");
 
-hotel.addRoom(room101);
-hotel.addRoom(room102);
-hotel.addRoom(room103);
-hotel.addRoom(room104);
+    const rooms = [
+        new Room(101, "Standard"),
+        new Room(102, "Deluxe"),
+        new Room(103, "Suite"),
+        new Room(104, "Standard")
+    ];
 
+    rooms.forEach(room => hotel.addRoom(room));
 
-const ui = new UI(hotel);
-ui.renderRooms();
+    const ui = new UI(hotel);
+    ui.renderRooms();
 
-global.bookRoom = function(number){
-    const room = hotel.rooms.find(r => r.number === number);
-    if (room){
-        alert(room.book());
-        ui.renderRooms();
-    }
-};
+    window.bookRoom = function (number) {
+        const room = hotel.rooms.find(r => r.number === number);
+        if (room) {
+            alert(room.book());
+            ui.renderRooms();
+        }
+    };
 
-global.cancelBooking = function(number){
-    const room = hotel.rooms.find(r => r.number === number);
-    if (room){
-        alert(room.cancelBooking());
-        ui.renderRooms();
-    }
-};
+    window.cancelBooking = function (number) {
+        const room = hotel.rooms.find(r => r.number === number);
+        if (room) {
+            alert(room.cancelBooking());
+            ui.renderRooms();
+        }
+    };
+
+    window.loadReviews = async function (number) {
+        const reviews = await HotelAPI.fetchReviews();
+        const randomReviews = reviews.sort(() => 0.5 - Math.random()).slice(0, 3);
+        const reviewsDiv = document.getElementById(`reviews-${number}`);
+        reviewsDiv.innerHTML = randomReviews.map(r => `<p>${r.body}</p>`).join('');
+    };
+});

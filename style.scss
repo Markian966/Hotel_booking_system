@@ -1,0 +1,24 @@
+$color-available: #a8e6cf;
+$color-booked: #ff8b94;
+$color-premium: #ffd3b6;
+
+.room {
+    border: 1px solid #e084cc;
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+
+    &.booked {
+        background-color: $color-booked;
+    }
+
+    &.premium-room {
+        border: 2px dashed $color-premium;
+    }
+}
+
+button {
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-top: 5px;
+}
